@@ -16,7 +16,7 @@ class Route
 
        	$scriptName = getenv('SCRIPT_NAME');
 
-       	
+
        	$scriptNameArr = explode('/', $scriptName);
 
        	if (count($scriptNameArr) > 2) {
@@ -29,6 +29,8 @@ class Route
        			$startIndex += strlen($val);
        		}
        		$requestUri = substr($requestUri, $startIndex);
+
+       		$scriptName = '/'.end($scriptNameArr);
        	}
 
        	if (strpos($requestUri, $scriptName) !== false) {
@@ -42,7 +44,7 @@ class Route
        	if ($requestUri == '/') {
        		$controllerName = ucfirst(DEFAULT_CONTROLLER);
        	} else {
-       		$requestUri = rtrim($requestUri, '/');
+       		$requestUri = trim($requestUri, '/');
        		$requestUri = explode('/', $requestUri);
 
        		$controllerName = ucfirst($requestUri[0]);
@@ -57,8 +59,10 @@ class Route
 
        	$controllerName = 'Controller\\'.$controllerName;
 
-       	if (!method_exists($controllerName, $actionName)) exit('方法不存在');
+       	$obj = new $controllerName;	
 
-       	(new $controllerName)->$actionName();
+       	if (!method_exists($obj, $actionName)) exit('方法不存在');
+
+       	$obj->$actionName();
     }
 }
