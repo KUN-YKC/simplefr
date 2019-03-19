@@ -8,4 +8,4 @@ $config = require_once './config.php';
 
 require_once '../SimpleFr.php';
 
-SimpleFr::run($config);
+SimpleFr\SimpleFr::run($config);

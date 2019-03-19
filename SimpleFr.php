@@ -39,14 +39,16 @@ class SimpleFr
      */
     static public function autoload($className)
     {
-    	$className = APP_PATH.str_replace('\\', '/', $className);
+    	$className = str_replace('\\', '/', $className);
     
     	if (strpos($className, 'SimpleFr') !== false) {
-            $filePath = APP_PATH . '/../'.strtolower($className).'.php';
+            $filePath = APP_PATH . '../'.strtolower($className).'.php';
         } else {
-            $filePath = APP_PATH.'/'.$className.'.php';
+            if (strpos($className, '/') === false) $className = 'Controller/'.$className;
+
+            $filePath = APP_PATH.$className.'.php';
         }
-    	if (!file_exists($filePath)) exit(end($filePath). '文件不存在');
+    	if (!file_exists($filePath)) exit($filePath. '文件不存在');
 
     	require_once($filePath);
     }

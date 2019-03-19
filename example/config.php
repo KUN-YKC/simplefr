@@ -4,7 +4,7 @@ return [
 	//数据库配置
 	'db' => [
 		'host' => 'localhost',
-		'dbname' => 'test',
+		'db_name' => 'test',
 		'user' => 'user',
 		'password' => 'password',
 		'db_prefix' => ''

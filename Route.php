@@ -16,6 +16,21 @@ class Route
 
        	$scriptName = getenv('SCRIPT_NAME');
 
+       	
+       	$scriptNameArr = explode('/', $scriptName);
+
+       	if (count($scriptNameArr) > 2) {
+       		$requestUri = rtrim($requestUri, '/');
+
+       		$startIndex = 1;
+       		foreach ($scriptNameArr as $key => $val) {
+       			if ($key + 1 == count($scriptNameArr)) break;
+
+       			$startIndex += strlen($val);
+       		}
+       		$requestUri = substr($requestUri, $startIndex);
+       	}
+
        	if (strpos($requestUri, $scriptName) !== false) {
        		$requestUri = str_replace($scriptName, '', $requestUri);
        	}
@@ -39,8 +54,11 @@ class Route
 
 
        	if (!file_exists($filePath)) exit('控制器不存在');
-       	require_once $filePath;
 
-       	(new $className)->$actionName();
+       	$controllerName = 'Controller\\'.$controllerName;
+
+       	if (!method_exists($controllerName, $actionName)) exit('方法不存在');
+
+       	(new $controllerName)->$actionName();
     }
 }
