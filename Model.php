@@ -11,15 +11,15 @@ class Model
 	private $condition;
 	//字段返回
 	private $fields = '*';
-
+	//排序
 	private $orderBy;
-
+	//分组
 	private $groupBy;
-
+	//限制
 	private $limit;
-
+	//连表
 	private $joinStr;
-
+	//表别名
 	private $alias;
 
 	/**
@@ -73,7 +73,7 @@ class Model
 		}
 		strlen($className) && $data[] = $className;
 
-		return implode('_', $data);
+		return strtolower(implode('_', $data));
 	}
 
 	/**
@@ -283,5 +283,37 @@ class Model
 		$this->limit = ' LIMIT '.$offset.','.$limit;
 
 		return $this;
+	}
+
+	/**
+	 * 开启事务
+	 */
+	public function startTransaction()
+	{
+		$this->conn->beginTransaction();
+	}
+
+	/**
+	 * 事务提交
+	 */
+	public function commit()
+	{
+		$this->conn->commit();
+	}
+
+	/**
+     * 事务回滚
+	 */
+	public function rollback()
+	{
+		$this->conn->rollBack();
+	}
+	
+	/**
+	 * 断开连接
+	 */	
+	public function __destruct()
+	{
+		$this->conn = null;
 	}
 }

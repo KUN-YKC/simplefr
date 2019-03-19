@@ -14,8 +14,4 @@ return [
 	'default_controller' => 'index',
 	//默认动作	
 	'default_action' => 'index',
-
-	//session处理
-	'session_handle' => 'file',
-	'session_save_path' => '/tmp',
 ];

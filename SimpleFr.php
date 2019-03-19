@@ -18,16 +18,19 @@ class SimpleFr
 
     	//定义自动加载
     	spl_autoload_register(['self', 'autoload']);
-    	//解析路由
-    	Route::parseUrl();
 
     	define('DB_HOST', $config['db']['host']);
     	define('DB_NAME', $config['db']['db_name']);
     	define('DB_USER', $config['db']['user']);
  		define('DB_PASSWORD', $config['db']['password']);
  		define('DB_PREFIX', $config['db']['db_prefix']);
+        define('DEFAULT_CONTROLLER', isset($config['default_controller']) ? $config['default_controller'] : 'index');
+        define('DEFAULT_ACTION', isset($config['default_action']) ? $config['default_action'] : 'index');
 
     	session_start();
+
+        //解析路由
+        Route::parseUrl();
     }
 
     /**
@@ -36,14 +39,16 @@ class SimpleFr
      */
     static public function autoload($className)
     {
-    	$file = APP_PATH.str_replace('\\', '/', $className);
+    	$className = APP_PATH.str_replace('\\', '/', $className);
     
-    	$fileArr = explode('/', $file);
-    	if (!file_exists($file)) exit(end($file). '文件不存在');
+    	if (strpos($className, 'SimpleFr') !== false) {
+            $filePath = APP_PATH . '/../'.strtolower($className).'.php';
+        } else {
+            $filePath = APP_PATH.'/'.$className.'.php';
+        }
+    	if (!file_exists($filePath)) exit(end($filePath). '文件不存在');
 
-    	if (pathinfo($file, PATHINFO_EXTENSION) !== 'php') exit('非php文件');
-
-    	require_once($file);
+    	require_once($filePath);
     }
 
 }
