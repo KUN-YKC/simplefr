@@ -27,8 +27,8 @@ class Model
 	 */
 	public function __construct()
 	{
-		$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-		$this->conn = new \PDO('mysql:host='.HOST.';DBNAME='.DB_NAME, DB_USER, DB_PASSWORD, $options);
+		$options = [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+		$this->conn = new \PDO('mysql:host='.HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD, $options);
 	
 		if ($this->conn->errorCode()) {
 			exit($this->conn->errorInfo()[2]);
@@ -38,8 +38,8 @@ class Model
 
 		//表的名称是否有定义,如果没有,解析类的名称即可
 		if (!$this->tableName) {
-			$className = explode('\\', __CLASS__);
-
+			$class = get_class($this);
+			$className = explode('\\', $class);
 			$className = end($className);
 
 			$this->tableName = $tablePrefix.$this->parseClassNameToTableName($className);
@@ -86,7 +86,8 @@ class Model
 	
 		$stmt = $this->conn->prepare($sql);
 
-		return $stmt->fetch(PDO::FETCH_ARRAY);
+		$stmt->execute();
+		return $stmt->fetch(\PDO::FETCH_NUM);
 	}
 
  	/**
@@ -96,7 +97,8 @@ class Model
 	{
 		$stmt = $this->conn->prepare($this->setSelectSql);
 
-		return $stmt->fetchAll(PDO::FETCH_ARRAY);
+		$stmt->execute();
+		return $stmt->fetchAll(\PDO::FETCH_NUM);
 	}
 
 	/**
